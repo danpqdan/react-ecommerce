@@ -14,6 +14,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -41,6 +42,8 @@ public class Usuario implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     Roles role;
+    @ManyToOne
+    Sacola sacola;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -51,7 +54,7 @@ public class Usuario implements UserDetails {
     }
 
     public Usuario(String username2, String encryptedPassword, Roles role2) {
-        //TODO Auto-generated constructor stub
+        // TODO Auto-generated constructor stub
     }
 
 }
