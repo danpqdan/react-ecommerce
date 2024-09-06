@@ -31,12 +31,12 @@ public class SacolaService {
         Usuario usuario = usuarioRepository.encontrarByUsername(authenticationDTO.username());
         Sacola sacola = sacolaRepository.findByUsuario(usuario);
         if (usuario != null && sacola == null) {
-            Sacola sacola2 = new Sacola();
-            sacola2.setUsuario(usuario);
-            usuario.setSacola(sacola2);
-            sacolaRepository.save(sacola2);
+            Sacola sacola1 = new Sacola();
+            usuario.newSacola(sacola1);
+            sacola1.setUsuario(usuario);
+            sacolaRepository.save(sacola1);
             usuarioRepository.saveAndFlush(usuario);
-            return sacola2;
+            return sacola1;
         }
         // if(usuario == null){} necessario tratar exceção de falha de usuario
         return sacola;
@@ -46,11 +46,10 @@ public class SacolaService {
         Sacola sacola = sacolaRepository.findById(dto.id()).orElseThrow();
         Produtos produto = produtoRepository.findById(dto.produto()).orElseThrow();
         Usuario usuario = usuarioRepository.findById(dto.usuario()).orElseThrow();
-        Sacola sacolaAtual = new Sacola();
-        if(sacola.getProdutos().isEmpty()){
-            sacolaAtual = sacola;
+        if (sacola.getProdutos().isEmpty()) {
+            sacola.setProdutos(new HashSet<>());
         }
-        sacola.setProdutos(new HashSet<>(Collections.singleton(produto)));
+        sacola.addProduto(produto);
         sacola.setUsuario(usuario);
         return sacolaRepository.saveAndFlush(sacola);
     }

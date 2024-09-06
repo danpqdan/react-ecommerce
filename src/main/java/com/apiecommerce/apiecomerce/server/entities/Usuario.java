@@ -2,12 +2,13 @@ package com.apiecommerce.apiecomerce.server.entities;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -18,7 +19,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -46,8 +47,10 @@ public class Usuario implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     Roles role;
-    @ManyToOne(fetch = FetchType.LAZY)
-    Sacola sacola;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference // Esse lado será serializado
+    Set<Sacola> sacola;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -59,6 +62,10 @@ public class Usuario implements UserDetails {
 
     public Usuario(String username2, String encryptedPassword, Roles role2) {
         // TODO Auto-generated constructor stub
+    }
+
+    public void newSacola(Sacola sacola) {
+        this.sacola.add(sacola);
     }
 
 }
