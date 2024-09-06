@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import com.apiecommerce.apiecomerce.server.entities.Usuario;
 
 @Repository
-public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     UserDetails findByUsername(String username);
 

@@ -3,6 +3,9 @@ package com.apiecommerce.apiecomerce.server.entities;
 import java.util.HashSet; // Import the HashSet class
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -27,7 +30,8 @@ public class Sacola {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    @ManyToOne()
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "usuario_id")
     Usuario usuario;
     @ManyToMany(fetch = FetchType.LAZY)

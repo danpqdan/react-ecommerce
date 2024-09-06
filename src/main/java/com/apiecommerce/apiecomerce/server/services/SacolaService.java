@@ -1,6 +1,7 @@
 package com.apiecommerce.apiecomerce.server.services;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,19 +42,25 @@ public class SacolaService {
         return sacola;
     }
 
-    public Sacola adicionarProdutos(SacolaDTO dto) {
-        Sacola sacola = sacolaRepository.findById(dto.getId()).get();
-        Produtos produto = produtoRepository.findById(dto.getProduto()).get();
-        sacola.setProdutos(Collections.singleton(produto));
-        return sacolaRepository.save(sacola);
+    public Sacola adicionarProdutos(SacolaProdutoDTO dto) {
+        Sacola sacola = sacolaRepository.findById(dto.id()).orElseThrow();
+        Produtos produto = produtoRepository.findById(dto.produto()).orElseThrow();
+        Usuario usuario = usuarioRepository.findById(dto.usuario()).orElseThrow();
+        Sacola sacolaAtual = new Sacola();
+        if(sacola.getProdutos().isEmpty()){
+            sacolaAtual = sacola;
+        }
+        sacola.setProdutos(new HashSet<>(Collections.singleton(produto)));
+        sacola.setUsuario(usuario);
+        return sacolaRepository.saveAndFlush(sacola);
     }
 
     public List<Sacola> todasSacolas() {
         return sacolaRepository.findAll();
     }
 
-    public Sacola listarSacola(SacolaProdutoDTO sacolaProdutoDTO) {
-        return sacolaRepository.findById(sacolaProdutoDTO.idSacola()).get();
+    public Sacola listarSacola(SacolaProdutoDTO dto) {
+        return sacolaRepository.findById(dto.id()).get();
     }
 
 }

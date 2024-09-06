@@ -57,7 +57,7 @@ public class AuthenticationController {
     }
 
     @PutMapping("/register/{id}")
-    public ResponseEntity registerAdmin(@RequestBody LoginResponseDTO loginResponseDTO, @PathVariable int id) {
+    public ResponseEntity registerAdmin(@RequestBody LoginResponseDTO loginResponseDTO, @PathVariable Long id) {
         Usuario usuario = repository.findById(id).get();
         usuario.setRole(Roles.ADMIN);
         repository.saveAndFlush(usuario);
