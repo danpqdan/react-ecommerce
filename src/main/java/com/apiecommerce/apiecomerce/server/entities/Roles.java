@@ -1,8 +1,8 @@
 package com.apiecommerce.apiecomerce.server.entities;
 
 public enum Roles {
-        ADMIN("admin"),
-        USER("user");
+        ADMIN("role_admin"),
+        USER("role_user");
 
         private String role;
 
