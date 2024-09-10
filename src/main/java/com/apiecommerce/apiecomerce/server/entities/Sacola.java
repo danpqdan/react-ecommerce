@@ -1,11 +1,9 @@
 package com.apiecommerce.apiecomerce.server.entities;
 
-import java.util.HashSet; // Import the HashSet class
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -15,7 +13,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -33,17 +30,18 @@ public class Sacola {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
-    @JsonBackReference  // Esse lado será ignorado na serialização
+    @JsonBackReference // Esse lado será ignorado na serialização
     Usuario usuario;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "sacola_produtos", joinColumns = @JoinColumn(name = "sacola_id"), inverseJoinColumns = @JoinColumn(name = "produto_id"))
-    Set<Produtos> produtos = new HashSet<>();
+    List<Produtos> produtos = new ArrayList<>();
+    Double valorFinal;
 
-    public void addProduto(Produtos produtos){
-        this.produtos.add(produtos);
+    public void addProduto(Produtos produto) {
+        this.produtos.add(produto);
     }
 
 }

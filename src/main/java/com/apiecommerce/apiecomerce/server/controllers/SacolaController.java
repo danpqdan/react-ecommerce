@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apiecommerce.apiecomerce.server.entities.DTO.AuthenticationDTO;
+import com.apiecommerce.apiecomerce.server.entities.DTO.ProdutoDTO;
 import com.apiecommerce.apiecomerce.server.entities.DTO.SacolaProdutoDTO;
 import com.apiecommerce.apiecomerce.server.services.SacolaService;
 
@@ -30,7 +31,9 @@ public class SacolaController {
     }
 
     @PostMapping("/sacolaid") // Rota dinamica de acordo com a sacola do usuario *IMPLEMENTAR*
-    public ResponseEntity adicionarProduto(@RequestBody SacolaProdutoDTO dto) {
+    public ResponseEntity adicionarProduto(@RequestBody Long id, @RequestBody int quantidade,
+            @RequestBody SacolaProdutoDTO dto) {
+        sacolaService.somaQuantidadeProduto(quantidade, id);
         return ResponseEntity.ok().body(sacolaService.adicionarProdutos(dto));
     }
 

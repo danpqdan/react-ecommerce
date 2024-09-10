@@ -33,7 +33,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/produtos").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/produtos").permitAll()
 
-                        .requestMatchers("/api/sacola/**").permitAll()
+                        .requestMatchers("/api/**").permitAll()
+
 
                         .requestMatchers("swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())

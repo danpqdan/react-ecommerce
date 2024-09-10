@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento Mercado Pago</title>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+</head>
+
+<body>
+    <h1>Pagamento</h1>
+    <div id="checkout-button"></div>
+
+    <script>
+        // Fazendo uma requisição ao back-end para obter o preference_id
+        fetch('/preference')
+            .then(response => response.text())
+            .then(preferenceId => {
+                console.log("Preference ID:", preferenceId);  // Exibe o preference_id no console do navegador
+                alert("Preference ID: " + preferenceId);     // Exibe o preference_id em um alerta
+
+                const mp = new MercadoPago('${token.mercadopago}', {
+                    locale: 'pt-BR'
+                });
+
+                mp.checkout({
+                    preference: {
+                        id: preferenceId  // Usa o preference_id obtido
+                    },
+                    render: {
+                        container: '#checkout-button',
+                        label: 'Pagar'
+                    }
+                });
+            });
+    </script>
+</body>
+
+</html>

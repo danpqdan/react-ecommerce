@@ -1,5 +1,7 @@
 package com.apiecommerce.apiecomerce.server.entities;
 
+import com.apiecommerce.apiecomerce.server.entities.DTO.ProdutoDTO;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,5 +23,13 @@ public class Produtos {
     Long id;
     String nome;
     Float preco;
+    int quantidade;
+
+    public int sunProdutos() {
+        if (this.quantidade == 0) {
+            return quantidade = +1;
+        }
+        return quantidade += 1;
+    }
 
 }
