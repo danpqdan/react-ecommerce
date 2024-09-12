@@ -1,4 +1,19 @@
 package com.apiecommerce.apiecomerce.server.entities.DTO;
 
-public record SacolaProdutoDTO(Long id, Long produto, Long usuario) {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class SacolaProdutoDTO {
+    long sacolaID;
+    long produtoID;
+    long usuarioID;
+    int quantidade;
+    double valorTotalSacola;
+
 }

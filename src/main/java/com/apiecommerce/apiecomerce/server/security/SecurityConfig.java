@@ -29,12 +29,13 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
-                        
+
                         .requestMatchers(HttpMethod.GET, "/api/produtos").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/produtos").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/produtos/").permitAll()
 
-                        .requestMatchers("/api/**").permitAll()
+                        .requestMatchers("/api/sacola/**").permitAll()
 
+                        .requestMatchers("/api/**","/**").permitAll()
 
                         .requestMatchers("swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())

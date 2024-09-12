@@ -7,6 +7,8 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -39,9 +41,15 @@ public class Sacola {
     @JoinTable(name = "sacola_produtos", joinColumns = @JoinColumn(name = "sacola_id"), inverseJoinColumns = @JoinColumn(name = "produto_id"))
     List<Produtos> produtos = new ArrayList<>();
     Double valorFinal;
+    @Enumerated(EnumType.STRING)
+    EstadoDaCompra estadoDaCompra;
 
     public void addProduto(Produtos produto) {
         this.produtos.add(produto);
+    }
+
+    public Sacola(Usuario usuario) {
+        this.usuario = usuario;
     }
 
 }

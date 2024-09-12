@@ -1,5 +1,6 @@
 package com.apiecommerce.apiecomerce.server.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.apiecommerce.apiecomerce.server.entities.Produtos;
 import com.apiecommerce.apiecomerce.server.entities.DTO.ProdutoDTO;
+import com.apiecommerce.apiecomerce.server.entities.DTO.QuantidadeProdutoDTO;
 import com.apiecommerce.apiecomerce.server.interfaces.ProdutoRepository;
 
 @RestController
@@ -31,5 +33,18 @@ public class ProdutoController {
         produtos.setNome(produtoDTO.nome());
         produtos.setPreco(produtoDTO.preco());
         return ResponseEntity.ok().body(produtoRepository.save(produtos));
+    }
+
+    @PostMapping("/produtos/quantidade")
+    public ResponseEntity<List<Produtos>> atualizarQuantidadeProdutos(
+            @RequestBody QuantidadeProdutoDTO quantidadeDeProdutos) {
+        var a = produtoRepository.buscarProdutoPorQuantidade(quantidadeDeProdutos.quantidadeProdutos());
+        List<Produtos> listaProduto = new ArrayList<>();
+        for (int i = 0; i < a.size(); i++) {
+            a.get(i).somaQuantidade(1);
+            listaProduto.add(a.get(i));
+        }
+        produtoRepository.saveAllAndFlush(listaProduto);
+        return ResponseEntity.ok().body(listaProduto);
     }
 }

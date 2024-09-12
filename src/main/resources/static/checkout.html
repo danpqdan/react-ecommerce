@@ -1,40 +1,36 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagamento Mercado Pago</title>
-    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <title>Teste Mercado Pago Sandbox</title>
 </head>
 
 <body>
-    <h1>Pagamento</h1>
-    <div id="checkout-button"></div>
 
-    <script>
-        // Fazendo uma requisição ao back-end para obter o preference_id
-        fetch('/preference')
-            .then(response => response.text())
-            .then(preferenceId => {
-                console.log("Preference ID:", preferenceId);  // Exibe o preference_id no console do navegador
-                alert("Preference ID: " + preferenceId);     // Exibe o preference_id em um alerta
 
-                const mp = new MercadoPago('${token.mercadopago}', {
-                    locale: 'pt-BR'
-                });
+    <html>
 
-                mp.checkout({
-                    preference: {
-                        id: preferenceId  // Usa o preference_id obtido
-                    },
-                    render: {
-                        container: '#checkout-button',
-                        label: 'Pagar'
-                    }
-                });
+    <head>
+        <script src="https://sdk.mercadopago.com/js/v2">
+        </script>
+    </head>
+
+    <body>
+        <div id="wallet_container">
+        </div>
+        <script>
+            const mp = new MercadoPago('TEST-98cbc922-d6c9-407a-8ecd-cc61f026c135', {
+                locale: 'pt-BR'
             });
-    </script>
-</body>
 
-</html>
+            mp.bricks().create("wallet", "wallet_container", {
+                initialization: {
+                    preferenceId: "<209512302-11c4d120-14fe-48da-998c-7530ec76dfcb>",
+                },
+            });
+        </script>
+    </body>
+
+    </html>

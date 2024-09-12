@@ -1,12 +1,9 @@
 package com.apiecommerce.apiecomerce.server.services;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.apiecommerce.apiecomerce.server.entities.Produtos;
@@ -29,11 +26,25 @@ public class SacolaService {
     UsuarioRepository usuarioRepository;
     @Autowired
     ProdutoRepository produtoRepository;
+    @Autowired
+    ProdutoService produtoService;
 
-    public Double somaValorProdutos(SacolaDTO dto) {
-        Sacola sacola = listarSacola(dto);
+    @Autowired
+    CustomUserDetailsService customUserDetailsService;
+
+    public boolean verificaSacolaExistente(Long id) {
+        boolean teste = true;
+        if (sacolaRepository.findById(id).isPresent()) {
+            return teste = false;
+        }
+        return teste;
+    }
+
+    public Double somaValorProdutos(SacolaProdutoDTO dto) {
+        Sacola sacola = listarSacola(dto.getSacolaID());
         var total = sacola.getProdutos().stream().mapToDouble(Produtos::getPreco).sum();
-        sacola.setValorFinal(total);
+        var totalValor = total * dto.getQuantidade();
+        sacola.setValorFinal(totalValor);
         sacolaRepository.saveAndFlush(sacola);
         return sacola.getValorFinal();
     }
@@ -49,37 +60,34 @@ public class SacolaService {
         produtoRepository.deleteById(produtoDTO.id());
     }
 
-    public Sacola novaSacola(AuthenticationDTO dto) {
-        var userBag = usuarioRepository.encontrarByUsername(dto.username());
-        if (userBag.getSacola().isEmpty()) {
-            Sacola newSacola = new Sacola();
-            userBag.getSacola().add(newSacola);
-            return newSacola;
+    public ResponseEntity novaSacola(AuthenticationDTO login) {
+        var user = usuarioRepository.encontrarByUsername(login.username());
+        if (customUserDetailsService.testeUsuario(login) != true) {
+            return ResponseEntity.notFound().build();
         }
-        return userBag.getSacola().iterator().next();
+        Sacola sacola = new Sacola(user);
+        sacolaRepository.save(sacola);
+        return ResponseEntity.accepted().body(sacola);
     }
 
-    public Sacola iniciarNovaSacola(AuthenticationDTO authenticationDTO) {
-        Sacola sacola = new Sacola();
-        novaSacola(authenticationDTO);
-        return sacola;
-    }
-
-    public Sacola adicionarProdutos(SacolaProdutoDTO dto) {
-        Sacola sacola = sacolaRepository.findById(dto.id()).orElseThrow();
-        Produtos produto = produtoRepository.findById(dto.produto()).orElseThrow();
-        Usuario usuario = usuarioRepository.findById(dto.usuario()).orElseThrow();
-        sacola.addProduto(produto);
-        sacola.setUsuario(usuario);
-        return sacolaRepository.saveAndFlush(sacola);
+    public ResponseEntity adicionarProdutos(SacolaProdutoDTO dto) {
+        Produtos produto = produtoRepository.findById(dto.getProdutoID()).orElseThrow();
+        Usuario usuario = usuarioRepository.findById(dto.getUsuarioID()).orElseThrow();
+        Sacola sacola = sacolaRepository.findByUsuario(usuario);
+        try {
+            sacola.addProduto(produto);
+            return ResponseEntity.accepted().body(sacolaRepository.saveAndFlush(sacola));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.fillInStackTrace());
+        }
     }
 
     public List<Sacola> todasSacolas() {
         return sacolaRepository.findAll();
     }
 
-    public Sacola listarSacola(SacolaDTO dto) {
-        return sacolaRepository.findById(dto.id()).get();
+    public Sacola listarSacola(Long id) {
+        return sacolaRepository.findById(id).orElseThrow();
     }
 
 }
