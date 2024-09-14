@@ -1,5 +1,6 @@
 package com.apiecommerce.apiecomerce.server.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +24,7 @@ public class Imagens {
     String nome;
     String descricao;
     @Lob
+    @Column(name = "dados", columnDefinition = "BLOB")
     private byte[] dados;
 
     public Imagens(String nome, String descricao, byte[] dados) {

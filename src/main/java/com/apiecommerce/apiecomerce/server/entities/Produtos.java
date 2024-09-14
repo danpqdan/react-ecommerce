@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,9 @@ public class Produtos {
     String nome;
     Float preco;
     int quantidade;
+    String descricao;
+    @OneToOne
+    Imagens imagem;
 
     public int somaQuantidade(int quantidade) {
         return this.quantidade += quantidade;

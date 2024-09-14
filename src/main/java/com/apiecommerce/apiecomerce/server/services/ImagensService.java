@@ -18,12 +18,12 @@ public class ImagensService {
     ImagensRepository imagensRepository;
 
     // Método para salvar o arquivo
-    public Imagens salvarImagem(MultipartFile arquivo) throws IOException {
-        String nomeArquivo = arquivo.getOriginalFilename();
-        String tipoArquivo = arquivo.getContentType();
-        byte[] dadosArquivo = arquivo.getBytes();
+    public Imagens salvarImagem(MultipartFile imagem, String descricao) throws IOException {
+        String nomeImagem = imagem.getOriginalFilename();
+        String descricaoImagem = descricao;
+        byte[] dadosImagem = imagem.getBytes();
 
-        Imagens novoImagem = new Imagens(nomeArquivo, tipoArquivo, dadosArquivo);
+        Imagens novoImagem = new Imagens(nomeImagem, descricaoImagem, dadosImagem);
         return imagensRepository.save(novoImagem);
     }
 
@@ -34,6 +34,15 @@ public class ImagensService {
 
     public List<Imagens> listarImagens() {
         return imagensRepository.findAll();
+    }
+
+    public List<Imagens> listarImagensCarousel() {
+        return imagensRepository.findByDescricao("carouselhome");
+    }
+
+    public String deleteImage(Long id) {
+        imagensRepository.deleteById(id);
+        return "ok";
     }
 
 }

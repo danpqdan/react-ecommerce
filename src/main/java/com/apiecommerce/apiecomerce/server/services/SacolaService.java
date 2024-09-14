@@ -57,7 +57,7 @@ public class SacolaService {
     }
 
     public void removeItem(ProdutoDTO produtoDTO) {
-        produtoRepository.deleteById(produtoDTO.id());
+        produtoRepository.deleteById(produtoDTO.getId());
     }
 
     public ResponseEntity novaSacola(AuthenticationDTO login) {

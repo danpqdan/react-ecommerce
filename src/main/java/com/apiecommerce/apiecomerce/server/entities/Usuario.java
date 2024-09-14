@@ -1,6 +1,8 @@
 package com.apiecommerce.apiecomerce.server.entities;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -50,7 +52,7 @@ public class Usuario implements UserDetails {
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference // Esse lado será serializado
-    Set<Sacola> sacola;
+    Set<Sacola> sacola = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -58,10 +60,6 @@ public class Usuario implements UserDetails {
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         else
             return List.of(new SimpleGrantedAuthority("ROLE_USER"));
-    }
-
-    public Usuario(String username2, String encryptedPassword, Roles role2) {
-        // TODO Auto-generated constructor stub
     }
 
     public void newSacola(Sacola sacola) {

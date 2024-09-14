@@ -13,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.apiecommerce.apiecomerce.server.services.SecurityFilter;
 
@@ -27,15 +30,27 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors(cors -> cors.configurationSource(request -> {
+                    var corsConfiguration = new CorsConfiguration();
+                    corsConfiguration.addAllowedOrigin("http://localhost:3000"); // Permitir acesso de
+                                                                                 // http://localhost:3000
+                    corsConfiguration.addAllowedMethod("*"); // Permitir todos os métodos HTTP
+                    corsConfiguration.addAllowedHeader("*"); // Permitir todos os cabeçalhos
+                    corsConfiguration.setAllowCredentials(true); // Permitir envio de cookies e cabeçalhos de
+                                                                 // autenticação
+                    return corsConfiguration;
+                }))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/auth/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/api/produtos").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/produtos/").permitAll()
+                        .requestMatchers("/api/admin").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/api/produtos").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.POST, "/api/produtos").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/api/imagens/carouselhome").permitAll()
 
                         .requestMatchers("/api/sacola/**").permitAll()
-
-                        .requestMatchers("/api/**","/**").permitAll()
 
                         .requestMatchers("swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated())
@@ -53,4 +68,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

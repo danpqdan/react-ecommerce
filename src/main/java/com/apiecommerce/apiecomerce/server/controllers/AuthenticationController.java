@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -33,10 +35,8 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody AuthenticationDTO data) {
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
-        
         var auth = this.authenticationManager.authenticate(usernamePassword);
         var token = tokenService.generatedToken((Usuario) auth.getPrincipal());
-
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
@@ -63,4 +63,5 @@ public class AuthenticationController {
         repository.saveAndFlush(usuario);
         return ResponseEntity.ok().body(usuario.getRole());
     }
+
 }

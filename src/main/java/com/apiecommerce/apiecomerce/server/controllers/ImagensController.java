@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,9 +31,11 @@ public class ImagensController {
 
     // Endpoint para upload de arquivo
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadArquivo(@RequestParam("arquivo") MultipartFile arquivo) {
+    public ResponseEntity<String> uploadArquivo(
+            @RequestParam("descricao") String descricao,
+            @RequestParam("arquivo") MultipartFile arquivo) {
         try {
-            Imagens novaImagem = imagensService.salvarImagem(arquivo);
+            Imagens novaImagem = imagensService.salvarImagem(arquivo, descricao);
             return ResponseEntity.status(HttpStatus.OK).body("Arquivo salvo com sucesso! ID: " + novaImagem.getId());
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Falha ao salvar o arquivo.");
@@ -58,6 +61,18 @@ public class ImagensController {
     public ResponseEntity<List<Imagens>> listarImagens() {
         List<Imagens> imagens = imagensService.listarImagens();
 
+        return ResponseEntity.ok(imagens);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deleteImage(@PathVariable Long id) {
+        var img = imagensService.deleteImage(id);
+        return "ok";
+    }
+
+    @GetMapping("/carouselhome")
+    public ResponseEntity<List<Imagens>> imagensCarouselHome() {
+        List<Imagens> imagens = imagensService.listarImagensCarousel();
         return ResponseEntity.ok(imagens);
     }
 }
