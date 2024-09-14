@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CarrouselHome from '../components/CarrouselHome';
+import Promocoes from '../components/Promocoes'
 
 const Home = () => {
 
@@ -7,6 +8,7 @@ const Home = () => {
 
         <>
             < CarrouselHome />
+            <Promocoes />
         </>
     )
 
